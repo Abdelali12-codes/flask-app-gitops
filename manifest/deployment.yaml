@@ -18,6 +18,11 @@ spec:
       containers:
       - image: 080266302756.dkr.ecr.us-east-2.amazonaws.com/flask_rest
         name: flask
+        envFrom:
+          - secretRef:
+              name: flask-app-sm
+          - secretRef:
+              name: flask-app-ssm
         ports:
         - containerPort: 5000
         resources:
