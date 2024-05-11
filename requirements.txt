@@ -1,6 +1,7 @@
 Flask==2.2.2
 itsdangerous==2.1.2
 prometheus-client==0.17.0
+mysql-connector-python==8.0.33
 Werkzeug==2.2.2
 Jinja2==3.1.1
 gunicorn==20.1.0
