@@ -6,8 +6,22 @@ on:
       - master
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      flaskapp: ${{ steps.changes.outputs.flaskapp }}
+    steps:
+    - uses: actions/checkout@v3
+    - uses: dorny/paths-filter@v2
+      id: changes
+      with:
+        filters: |
+          flaskapp:
+            - '**' 
   deploy:
     runs-on: ubuntu-latest
+    needs: changes
+    if: ${{ needs.changes.outputs.flaskapp == 'true' }}
     permissions:
       id-token: write # This is required for requesting the JWT
       contents: read  # This is required for actions/checkout
@@ -42,7 +56,10 @@ jobs:
 
   updatemanifest:
     runs-on: ubuntu-latest
-    needs: deploy
+    needs: [ deploy, changes ]
+    permissions:
+      pull-requests: write
+    if: ${{ needs.changes.outputs.flaskapp == 'true' }}
     steps:
       - name: Checkout Kubernetes manifest repository
         uses: actions/checkout@v2
