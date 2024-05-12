@@ -11,6 +11,9 @@ jobs:
     permissions:
       id-token: write # This is required for requesting the JWT
       contents: read  # This is required for actions/checkout
+    outputs:
+      imagetag: ${{ steps.tag.outputs.imagetag }}
+      registry: ${{ steps.login-ecr.outputs.registry }}
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -27,6 +30,7 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v2
 
     - name: Build, tag, and push docker image to Amazon ECR
+      id: tag
       env:
         REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         REPOSITORY: flask_rest
@@ -34,3 +38,38 @@ jobs:
       run: |
         docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
         docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+        echo "imagetag=$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+  updatemanifest:
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
+      - name: Checkout Kubernetes manifest repository
+        uses: actions/checkout@v2
+        with:
+          repository: Abdelali12-codes/flask-app-k8s-manifests-gitops
+
+      - name: Update Kubernetes manifest
+        run: |
+          sed -i 's@'$ECR_REPO_URI.*'@'$ECR_REPO_URI:$IMAGE_TAG'@'  $HOME/eks_manifest/manifest/deployment_service.yaml
+        env:
+          ECR_REPO_URI: ${{ needs.deploy.outputs.registry }}:flask_rest
+          IMAGE_TAG: ${{ needs.deploy.outputs.imagetag }}
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+          git add .
+          git commit -m "Update deployment image"
+          git push
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Update deployment image
+          title: Update deployment image
+          body: |
+            This PR updates the deployment image to the latest version.
+          labels: auto-update
