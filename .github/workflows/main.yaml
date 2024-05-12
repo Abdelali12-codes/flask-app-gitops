@@ -86,7 +86,7 @@ jobs:
         id: br
         run: |
           tag=${{ needs.deploy.outputs.imagetag }}
-          branch="${tag: -8}
+          branch="${tag: -8}"
           echo "branch=$branch" >> $GITHUB_OUTPUT
 
       - name: Create Pull Request
