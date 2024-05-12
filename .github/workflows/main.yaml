@@ -81,6 +81,7 @@ jobs:
           git config --global user.name "Your Name"
           git add .
           git commit -m "Update deployment image"
+          
       - name: Branch name 
         id: br
         run: |
