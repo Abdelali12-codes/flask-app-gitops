@@ -81,7 +81,7 @@ jobs:
           git config --global user.name "Your Name"
           git add .
           git commit -m "Update deployment image"
-          
+
       - name: Branch name 
         id: br
         run: |
@@ -91,7 +91,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
         with:
-          git-token: ${{ secerts.git_token }}
+          git-token: ${{ secrets.git_token }}
           commit-message: Update deployment image
           branch: ${{ steps.br.outputs.branch }}
           title: Update deployment image
