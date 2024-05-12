@@ -92,7 +92,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
         with:
-          git-token: ${{ secrets.git_token }}
+          token: ${{ secrets.git_token }}
           commit-message: Update deployment image
           branch: ${{ steps.br.outputs.branch }}
           title: Update deployment image
