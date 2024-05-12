@@ -51,7 +51,7 @@ jobs:
 
       - name: Update Kubernetes manifest
         run: |
-          sed -i 's@'$ECR_REPO_URI.*'@'$ECR_REPO_URI:$IMAGE_TAG'@'  $HOME/eks_manifest/manifest/deployment_service.yaml
+          sed -i 's@'$ECR_REPO_URI.*'@'$ECR_REPO_URI:$IMAGE_TAG'@'  deployment.yaml
         env:
           ECR_REPO_URI: ${{ needs.deploy.outputs.registry }}:flask_rest
           IMAGE_TAG: ${{ needs.deploy.outputs.imagetag }}
