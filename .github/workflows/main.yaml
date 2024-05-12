@@ -8,7 +8,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read  # This is required for actions/checkout
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -17,6 +19,7 @@ jobs:
       uses: aws-actions/configure-aws-credentials@v4 
       with:
         role-to-assume: ${{ secrets.role_arn }}
+        role-session-name: oidcsessionName
         aws-region: us-east-2
 
     - name: Login to Amazon ECR
