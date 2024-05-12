@@ -51,10 +51,16 @@ jobs:
 
       - name: Update Kubernetes manifest
         run: |
+          echo "sed -i 's@'$ECR_REPO_URI.*'@'$ECR_REPO_URI:$IMAGE_TAG'@'  deployment.yaml"
           sed -i 's@'$ECR_REPO_URI.*'@'$ECR_REPO_URI:$IMAGE_TAG'@'  deployment.yaml
         env:
           ECR_REPO_URI: ${{ needs.deploy.outputs.registry }}:flask_rest
           IMAGE_TAG: ${{ needs.deploy.outputs.imagetag }}
+
+      - name: show files 
+        run: |
+           ls -l
+           git status
 
       - name: Commit and push changes
         run: |
