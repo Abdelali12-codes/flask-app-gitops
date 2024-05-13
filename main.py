@@ -21,6 +21,8 @@ try:
     )
     if connection.is_connected():
         print('Connected to MySQL database!')
+    else:
+        print('Connection Not established')
 except Error as e:
     print('Failed to connect to MySQL database:', e)
     raise e
