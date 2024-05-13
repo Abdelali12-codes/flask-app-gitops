@@ -56,7 +56,7 @@ jobs:
 
   updatemanifest:
     runs-on: ubuntu-latest
-    needs: [ deploy, changes ]
+    needs: [ build, changes ]
     permissions:
       pull-requests: write
       contents: write
