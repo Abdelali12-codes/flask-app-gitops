@@ -74,8 +74,8 @@ jobs:
           echo "sed -i 's@'$ECR_REPO_URI.*'@'$ECR_REPO_URI:$IMAGE_TAG'@'  deployment.yaml"
           sed -i 's@'$ECR_REPO_URI.*'@'$ECR_REPO_URI:$IMAGE_TAG'@'  deployment.yaml
         env:
-          ECR_REPO_URI: ${{ needs.deploy.outputs.registry }}/flask_rest
-          IMAGE_TAG: ${{ needs.deploy.outputs.imagetag }}
+          ECR_REPO_URI: ${{ needs.build.outputs.registry }}/flask_rest
+          IMAGE_TAG: ${{ needs.build.outputs.imagetag }}
 
       - name: Commit and push changes
         run: |
@@ -87,7 +87,7 @@ jobs:
       - name: Branch name 
         id: br
         run: |
-          tag=${{ needs.deploy.outputs.imagetag }}
+          tag=${{ needs.build.outputs.imagetag }}
           branch="${tag: -8}"
           echo "branch=$branch" >> $GITHUB_OUTPUT
 
