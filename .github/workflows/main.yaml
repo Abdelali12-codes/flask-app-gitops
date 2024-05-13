@@ -112,7 +112,7 @@ jobs:
         with:
           payload: |
             {
-              "text": ""New pull request created: :warning: *Update deployment image*\n${{ needs.updatemanifest.outputs.prurl }}\nPlease review and merge",
+              "text": "New pull request created: :warning: *Update deployment image*\n${{ needs.updatemanifest.outputs.prurl }}\nPlease review and merge",
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
